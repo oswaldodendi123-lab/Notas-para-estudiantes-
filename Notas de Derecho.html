@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Notas de Derecho</title>
+<style>
+:root{--bg:#faf8f5;--card:#fff;--ink:#1f2330;--mut:#6b7080;--acc:#7a1f2b;--line:#e4dfd8;--tag:#f1e6e8;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#16181f;--card:#1f222b;--ink:#ecebe8;--mut:#9a9eac;--acc:#e08a96;--line:#31343f;--tag:#3a2a2e}}
+:root[data-theme="dark"]{--bg:#16181f;--card:#1f222b;--ink:#ecebe8;--mut:#9a9eac;--acc:#e08a96;--line:#31343f;--tag:#3a2a2e}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Georgia,"Times New Roman",serif}
+main{max-width:760px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:1.6rem;margin:0 0 4px;color:var(--acc)}
+.sub{color:var(--mut);margin:0 0 18px;font-size:.95rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:14px}
+label{display:block;font-size:.8rem;color:var(--mut);margin:10px 0 3px;font-family:system-ui,sans-serif}
+input,textarea{width:100%;padding:9px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);font:inherit}
+textarea{min-height:70px;resize:vertical}
+button{font:600 .9rem system-ui,sans-serif;border:0;border-radius:6px;padding:9px 14px;background:var(--acc);color:#fff;cursor:pointer;margin-top:12px}
+button.sec{background:transparent;color:var(--acc);border:1px solid var(--acc);margin-left:6px}
+.tag{display:inline-block;background:var(--tag);color:var(--acc);border-radius:99px;padding:2px 10px;font:.78rem system-ui,sans-serif;margin:0 4px 4px 0;cursor:pointer}
+.note h3{margin:0 0 6px}
+.sec-t{font:600 .75rem system-ui,sans-serif;color:var(--mut);text-transform:uppercase;letter-spacing:.05em;margin:10px 0 2px}
+.note p{margin:0;white-space:pre-wrap}
+.acts{margin-top:10px}.acts button{margin-top:0;padding:5px 10px;font-size:.8rem}
+.empty{color:var(--mut);text-align:center;padding:24px}
+[hidden]{display:none!important}
+.tabs{display:flex;gap:6px;margin-bottom:16px}
+.tabs button{margin:0;background:transparent;color:var(--acc);border:1px solid var(--acc)}
+.tabs button.on{background:var(--acc);color:#fff}
+select{width:100%;padding:9px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);font:inherit}
+.meta{font:.8rem system-ui,sans-serif;color:var(--mut);margin:0 0 6px}
+.msg{color:var(--mut);font:.9rem system-ui,sans-serif;margin:0 0 12px}
+</style>
+</head>
+<body>
+<main>
+<h1>Notas de Derecho</h1>
+<p class="sub">Guarda conceptos con palabras clave, ejemplos y referencias, y comparte clases, apuntes y exámenes.</p>
+<div class="tabs"><button class="on" data-v="mis">Mis notas</button><button data-v="bib">Biblioteca compartida</button></div>
+<div id="v-mis">
+
+<div class="card">
+<label for="q">Buscar por título, palabra clave o texto</label>
+<input id="q" placeholder="Ej.: prescripción">
+<div id="tags" style="margin-top:10px"></div>
+</div>
+
+<div class="card">
+<label for="t">Título</label><input id="t" placeholder="Ej.: Prescripción adquisitiva">
+<label for="k">Palabras clave (separadas por coma)</label><input id="k" placeholder="posesión, plazo, usucapión">
+<label for="n">Nota</label><textarea id="n"></textarea>
+<label for="e">Ejemplo</label><textarea id="e"></textarea>
+<label for="r">Referencia (artículo, sentencia, autor)</label><input id="r" placeholder="Código Civil, art. 950">
+<button id="save">Guardar nota</button><button id="cancel" class="sec" style="display:none">Cancelar</button>
+</div>
+
+<div id="list"></div>
+</div>
+<div id="v-bib" hidden>
+<p class="msg" id="lib-msg">Cargando biblioteca…</p>
+<div class="card" id="lib-form">
+<label for="b-tipo">Tipo</label><select id="b-tipo"><option>Clase</option><option>Apuntes</option><option>Examen</option><option>Otro</option></select>
+<label for="b-t">Título</label><input id="b-t" placeholder="Ej.: Parcial de Derecho Civil I">
+<label for="b-m">Materia</label><input id="b-m" placeholder="Ej.: Derecho Civil">
+<label for="b-c">Contenido</label><textarea id="b-c" style="min-height:110px"></textarea>
+<button id="b-pub">Publicar</button>
+</div>
+<div class="card"><label for="b-q">Buscar en la biblioteca</label><input id="b-q" placeholder="Título, materia o texto">
+<div id="b-tipos" style="margin-top:10px"></div></div>
+<div id="b-list"></div>
+</div>
+</main>
+<script>
+var notes=[],editId=null,tagFilter=null;
+function load(){try{notes=JSON.parse(localStorage.getItem("notas-derecho")||"[]")}catch(e){notes=[]}}
+function persist(){try{localStorage.setItem("notas-derecho",JSON.stringify(notes))}catch(e){}}
+function $(id){return document.getElementById(id)}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function render(){
+ var q=$("q").value.toLowerCase().trim();
+ var all={};notes.forEach(function(n){n.k.forEach(function(t){all[t]=1})});
+ $("tags").innerHTML=Object.keys(all).sort().map(function(t){return '<span class="tag" data-t="'+esc(t)+'" style="'+(t===tagFilter?'outline:2px solid var(--acc)':'')+'">'+esc(t)+'</span>'}).join("");
+ var res=notes.filter(function(n){
+  if(tagFilter&&n.k.indexOf(tagFilter)<0)return false;
+  return !q||(n.t+" "+n.k.join(" ")+" "+n.n+" "+n.e+" "+n.r).toLowerCase().indexOf(q)>=0});
+ $("list").innerHTML=res.length?res.map(function(n){
+  return '<div class="card note"><h3>'+esc(n.t)+'</h3>'+n.k.map(function(t){return '<span class="tag" data-t="'+esc(t)+'">'+esc(t)+'</span>'}).join("")+
+  (n.n?'<div class="sec-t">Nota</div><p>'+esc(n.n)+'</p>':'')+
+  (n.e?'<div class="sec-t">Ejemplo</div><p>'+esc(n.e)+'</p>':'')+
+  (n.r?'<div class="sec-t">Referencia</div><p>'+esc(n.r)+'</p>':'')+
+  '<div class="acts"><button class="sec" data-a="edit" data-id="'+n.id+'" style="margin:0">Editar</button><button class="sec" data-a="del" data-id="'+n.id+'">Borrar</button></div></div>'}).join("")
+  :'<div class="empty">Aún no hay notas que mostrar.</div>';
+}
+function reset(){["t","k","n","e","r"].forEach(function(i){$(i).value=""});editId=null;$("save").textContent="Guardar nota";$("cancel").style.display="none"}
+$("save").onclick=function(){
+ var t=$("t").value.trim();if(!t){$("t").focus();return}
+ var o={id:editId||String(Date.now()),t:t,k:$("k").value.split(",").map(function(s){return s.trim().toLowerCase()}).filter(Boolean),n:$("n").value.trim(),e:$("e").value.trim(),r:$("r").value.trim()};
+ if(editId){notes=notes.map(function(x){return x.id===editId?o:x})}else{notes.unshift(o)}
+ persist();reset();render()};
+$("cancel").onclick=reset;
+$("q").oninput=render;
+document.addEventListener("click",function(ev){
+ var el=ev.target,t=el.getAttribute("data-t"),a=el.getAttribute("data-a"),id=el.getAttribute("data-id");
+ if(t){tagFilter=(tagFilter===t)?null:t;render()}
+ if(a==="del"&&confirm("¿Borrar esta nota?")){notes=notes.filter(function(x){return x.id!==id});persist();render()}
+ if(a==="edit"){var n=notes.filter(function(x){return x.id===id})[0];editId=id;
+  $("t").value=n.t;$("k").value=n.k.join(", ");$("n").value=n.n;$("e").value=n.e;$("r").value=n.r;
+  $("save").textContent="Actualizar nota";$("cancel").style.display="inline-block";window.scrollTo(0,0)}
+});
+var lib={items:[],db:null,user:null,uid:null,names:{},tipo:null};
+function libRender(){
+ var q=$("b-q").value.toLowerCase().trim();
+ $("b-tipos").innerHTML=["Clase","Apuntes","Examen","Otro"].map(function(t){return '<span class="tag" data-ty="'+t+'" style="'+(t===lib.tipo?'outline:2px solid var(--acc)':'')+'">'+t+'</span>'}).join("");
+ var res=lib.items.filter(function(p){
+  if(lib.tipo&&p.tipo!==lib.tipo)return false;
+  return !q||((p.t||"")+" "+(p.materia||"")+" "+(p.c||"")).toLowerCase().indexOf(q)>=0});
+ $("b-list").innerHTML=res.length?res.map(function(p){
+  var who=lib.names[p.autorId]||"Un estudiante";
+  var d=p.ts?new Date(p.ts).toLocaleDateString("es"):"";
+  return '<div class="card note"><span class="tag">'+esc(p.tipo||"")+'</span>'+(p.materia?'<span class="tag">'+esc(p.materia)+'</span>':'')+
+  '<h3>'+esc(p.t||"")+'</h3><p class="meta">'+esc(who)+(d?' · '+d:'')+'</p>'+
+  (p.c?'<p>'+esc(p.c)+'</p>':'')+
+  (lib.uid&&p.autorId===lib.uid?'<div class="acts"><button class="sec" data-a="ldel" data-id="'+esc(p.id)+'" style="margin:0">Borrar</button></div>':'')+'</div>'}).join("")
+  :'<div class="empty">Todavía no hay publicaciones.</div>';
+}
+async function libInit(){
+ if(typeof claude==="undefined"||!claude.use){$("lib-msg").textContent="La biblioteca compartida no está disponible aquí.";$("lib-form").hidden=true;return}
+ try{lib.user=await claude.use("user")}catch(e){}
+ try{lib.db=await claude.use("db")}catch(e){}
+ if(!lib.db){$("lib-msg").textContent="La biblioteca compartida no está disponible. Inicia sesión para verla.";$("lib-form").hidden=true;return}
+ try{lib.uid=lib.user?await lib.user.id():null}catch(e){}
+ var cw=null;try{cw=lib.user?await lib.user.can("data.write"):null}catch(e){}
+ if(cw===false){$("lib-form").hidden=true;$("lib-msg").textContent="Puedes leer la biblioteca, pero tu acceso no permite publicar."}else{$("lib-msg").textContent=""}
+ lib.db.collection("publicaciones").orderBy("ts","desc").limit(200).onSnapshot(async function(s){
+  lib.items=s.docs.map(function(d){var o=d.data()||{};o.id=d.id;return o});
+  var ids=[];lib.items.forEach(function(p){if(p.autorId&&ids.indexOf(p.autorId)<0&&lib.names[p.autorId]===undefined)ids.push(p.autorId)});
+  if(ids.length&&lib.user){try{var ps=await lib.user.profiles(ids);ids.forEach(function(i){lib.names[i]=(ps[i]&&ps[i].name)||""})}catch(e){}}
+  libRender()},function(){$("lib-msg").textContent="No se pudo cargar la biblioteca."});
+}
+$("b-pub").onclick=async function(){
+ var t=$("b-t").value.trim();if(!t){$("b-t").focus();return}
+ if(!lib.db)return;
+ try{await lib.db.collection("publicaciones").add({tipo:$("b-tipo").value,t:t,materia:$("b-m").value.trim(),c:$("b-c").value.trim(),autorId:lib.uid||"",ts:Date.now()});
+  $("b-t").value="";$("b-m").value="";$("b-c").value="";$("lib-msg").textContent=""}
+ catch(e){$("lib-msg").textContent="No se pudo publicar. Es posible que tu acceso no lo permita."}
+};
+$("b-q").oninput=libRender;
+document.addEventListener("click",async function(ev){
+ var el=ev.target,v=el.getAttribute("data-v"),ty=el.getAttribute("data-ty"),a=el.getAttribute("data-a"),id=el.getAttribute("data-id");
+ if(v){$("v-mis").hidden=(v!=="mis");$("v-bib").hidden=(v!=="bib");
+  Array.prototype.forEach.call(document.querySelectorAll(".tabs button"),function(b){b.className=(b.getAttribute("data-v")===v)?"on":""})}
+ if(ty){lib.tipo=(lib.tipo===ty)?null:ty;libRender()}
+ if(a==="ldel"&&lib.db&&confirm("¿Borrar esta publicación?")){try{await lib.db.doc("publicaciones/"+id).delete()}catch(e){$("lib-msg").textContent="No se pudo borrar."}}
+});
+load();render();libRender();libInit();
+</script>
+</body>
+</html>

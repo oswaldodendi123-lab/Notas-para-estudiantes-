@@ -1,1 +1,471 @@
 # Notas-para-estudiantes-
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Notas de Derecho</title>
+<style>
+:root{--bg:#faf8f5;--card:#fff;--ink:#1f2330;--mut:#6b7080;--acc:#7a1f2b;--line:#e4dfd8;--tag:#f1e6e8;--warn:#fff7e6;--shadow:rgba(22,21,26,.05);--ok:#eaf9f1;--danger:#fff0f0;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#16181f;--card:#1f222b;--ink:#ecebe8;--mut:#9a9eac;--acc:#e08a96;--line:#31343f;--tag:#3a2a2e;--warn:#332b1d;--shadow:rgba(0,0,0,.2);--ok:#1d2d26;--danger:#2d1b1b}} 
+:root[data-theme="dark"]{--bg:#16181f;--card:#1f222b;--ink:#ecebe8;--mut:#9a9eac;--acc:#e08a96;--line:#31343f;--tag:#3a2a2e;--warn:#332b1d;--shadow:rgba(0,0,0,.2);--ok:#1d2d26;--danger:#2d1b1b}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Georgia,"Times New Roman",serif}
+main{max-width:820px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:1.6rem;margin:0 0 4px;color:var(--acc)}
+.sub{color:var(--mut);margin:0 0 18px;font-size:.95rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:14px;box-shadow:0 2px 12px var(--shadow)}
+label{display:block;font-size:.8rem;color:var(--mut);margin:10px 0 3px;font-family:system-ui,sans-serif}
+input,textarea,select{width:100%;padding:9px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);font:inherit}
+textarea{min-height:70px;resize:vertical}
+button{font:600 .9rem system-ui,sans-serif;border:0;border-radius:6px;padding:9px 14px;background:var(--acc);color:#fff;cursor:pointer;margin-top:12px}
+button.sec{background:transparent;color:var(--acc);border:1px solid var(--acc);margin-left:6px}
+.tag{display:inline-block;background:var(--tag);color:var(--acc);border-radius:99px;padding:2px 10px;font:.78rem system-ui,sans-serif;margin:0 4px 4px 0;cursor:pointer}
+.note h3{margin:0 0 6px}
+.sec-t{font:600 .75rem system-ui,sans-serif;color:var(--mut);text-transform:uppercase;letter-spacing:.05em;margin:10px 0 2px}
+.note p{margin:0;white-space:pre-wrap}
+.acts{margin-top:10px}.acts button{margin-top:0;padding:5px 10px;font-size:.8rem}
+.empty{color:var(--mut);text-align:center;padding:24px}
+[hidden]{display:none!important}
+.tabs{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.tabs button{margin:0;background:transparent;color:var(--acc);border:1px solid var(--acc)}
+.tabs button.on{background:var(--acc);color:#fff}
+.meta{font:.8rem system-ui,sans-serif;color:var(--mut);margin:0 0 6px}
+.msg{color:var(--mut);font:.9rem system-ui,sans-serif;margin:0 0 12px}
+.doc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:10px}
+.doc-item{border:1px solid var(--line);border-radius:8px;padding:10px;background:var(--bg)}
+.doc-item img{display:block;width:100%;height:120px;object-fit:cover;border-radius:6px;margin-bottom:8px;border:1px solid var(--line)}
+.doc-file{display:block;padding:10px;border-radius:8px;background:var(--warn);color:var(--ink);text-decoration:none;border:1px solid var(--line);margin-bottom:8px;text-align:center}
+.doc-meta{font:.75rem system-ui,sans-serif;color:var(--mut);margin:0 0 8px}
+.doc-actions{display:flex;justify-content:flex-end}
+.file-input{padding:8px;display:block}
+.folder-title{font-size:1rem;color:var(--acc);margin:0 0 8px;font-weight:700}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.result-box{background:var(--ok);border:1px solid #b5d8c4;border-radius:8px;padding:12px;color:var(--ink)}
+.warning-box{background:var(--danger);border:1px solid #e5b7b7;border-radius:8px;padding:12px}
+.small{font-size:.83rem}
+pre{white-space:pre-wrap;word-break:break-word;font-family:inherit;background:var(--bg);padding:12px;border-radius:8px;border:1px solid var(--line);margin:10px 0 0;line-height:1.5}
+</style>
+</head>
+<body>
+<main>
+<h1>Notas de Derecho</h1>
+<p class="sub">Guarda conceptos con palabras clave, ejemplos y referencias, y comparte clases, apuntes y exámenes.</p>
+<div class="tabs">
+  <button class="on" data-v="mis">Mis notas</button>
+  <button data-v="bib">Biblioteca compartida</button>
+  <button data-v="friedman">Método Friedman</button>
+  <button data-v="docq">Preguntas del documento</button>
+</div>
+
+<div id="v-mis">
+  <div class="card">
+    <label for="q">Buscar por título, palabra clave o texto</label>
+    <input id="q" placeholder="Ej.: prescripción">
+    <div id="tags" style="margin-top:10px"></div>
+  </div>
+
+  <div class="card">
+    <label for="t">Título</label><input id="t" placeholder="Ej.: Prescripción adquisitiva">
+    <label for="k">Palabras clave (separadas por coma)</label><input id="k" placeholder="posesión, plazo, usucapión">
+    <label for="n">Nota</label><textarea id="n"></textarea>
+    <label for="e">Ejemplo</label><textarea id="e"></textarea>
+    <label for="r">Referencia (artículo, sentencia, autor)</label><input id="r" placeholder="Código Civil, art. 950">
+    <button id="save">Guardar nota</button><button id="cancel" class="sec" style="display:none">Cancelar</button>
+  </div>
+
+  <div class="card">
+    <div class="sec-t" style="margin-top:0">Carpeta de universidad / documentos</div>
+    <label for="u-buscar">Buscar por universidad o nombre del archivo</label>
+    <input id="u-buscar" placeholder="Ej.: Universidad de Chile, Tesis, PDF">
+    <label for="u-universidad">Nombre de la universidad</label>
+    <input id="u-universidad" placeholder="Ej.: Universidad Nacional de Córdoba">
+    <label for="u-titulo">Título del documento</label>
+    <input id="u-titulo" placeholder="Ej.: Programa de Derecho Civil">
+    <label for="u-tipo">Tipo de archivo</label>
+    <select id="u-tipo">
+      <option value="Documento">Documento</option>
+      <option value="Imagen">Imagen</option>
+      <option value="PDF">PDF</option>
+      <option value="Apunte">Apunte</option>
+    </select>
+    <label for="u-desc">Descripción</label>
+    <textarea id="u-desc" placeholder="Ej.: Material de clase, resumen, exámen o documento compartido"></textarea>
+    <label for="u-file">Subir imagen o documento</label>
+    <input id="u-file" class="file-input" type="file" accept="image/*,.pdf,.doc,.docx,.txt,.md,.html,.csv,.json,.ppt,.pptx,.xls,.xlsx">
+    <button id="u-save">Guardar en la carpeta</button>
+  </div>
+
+  <div id="u-list"></div>
+  <div id="list"></div>
+</div>
+
+<div id="v-bib" hidden>
+  <p class="msg" id="lib-msg">Cargando biblioteca…</p>
+  <div class="card" id="lib-form">
+    <label for="b-tipo">Tipo</label><select id="b-tipo"><option>Clase</option><option>Apuntes</option><option>Examen</option><option>Otro</option></select>
+    <label for="b-t">Título</label><input id="b-t" placeholder="Ej.: Parcial de Derecho Civil I">
+    <label for="b-m">Materia</label><input id="b-m" placeholder="Ej.: Derecho Civil">
+    <label for="b-c">Contenido</label><textarea id="b-c" style="min-height:110px"></textarea>
+    <button id="b-pub">Publicar</button>
+  </div>
+  <div class="card"><label for="b-q">Buscar en la biblioteca</label><input id="b-q" placeholder="Título, materia o texto">
+    <div id="b-tipos" style="margin-top:10px"></div></div>
+  <div id="b-list"></div>
+</div>
+
+<div id="v-friedman" hidden>
+  <div class="card">
+    <h3 style="margin:0 0 8px">Calculadora del método Friedman</h3>
+    <p class="small">Ingresa una matriz con filas = evaluadores y columnas = alternativas. Se ordenan las puntuaciones por fila para obtener los rangos.</p>
+    <label for="fr-matriz">Matriz de datos</label>
+    <textarea id="fr-matriz" placeholder="Ejemplo:&#10;Juez 1, 8, 5, 7&#10;Juez 2, 6, 9, 4&#10;Juez 3, 7, 6, 8&#10;Juez 4, 9, 7, 5">Juez 1, 8, 5, 7
+Juez 2, 6, 9, 4
+Juez 3, 7, 6, 8
+Juez 4, 9, 7, 5</textarea>
+    <button id="fr-calc">Calcular Friedman</button>
+    <div id="fr-result" class="result-box" style="margin-top:12px">Aún no hay resultados.</div>
+  </div>
+</div>
+
+<div id="v-docq" hidden>
+  <div class="card">
+    <h3 style="margin:0 0 8px">Preguntas sobre el documento subido</h3>
+    <label for="docq-file">Sube un documento de texto</label>
+    <input id="docq-file" class="file-input" type="file" accept=".txt,.md,.html,.json,.csv">
+    <label for="docq-question">Pregunta</label>
+    <textarea id="docq-question" placeholder="Ej.: ¿Qué dice el documento sobre la usucapión?"></textarea>
+    <button id="docq-ask">Responder</button>
+    <div id="docq-result" class="warning-box" style="margin-top:12px">Sube un archivo de texto para poder responder preguntas.</div>
+  </div>
+</div>
+</main>
+
+<script>
+var notes=[],editId=null,tagFilter=null,docItems=[];
+var documentKnowledge={text:"",fileName:""};
+
+function escapeHtml(value){
+  return String(value || "").replace(/[&<>\"']/g,function(ch){
+    return {"&":"&amp;","<":"&lt;", ">":"&gt;", '"':"&quot;","'":"&#39;"}[ch];
+  });
+}
+
+function load(){
+  try{notes=JSON.parse(localStorage.getItem("notas-derecho")||"[]")}catch(e){notes=[]}
+  try{docItems=JSON.parse(localStorage.getItem("documentos-universidades")||"[]")}catch(e){docItems=[]}
+}
+
+function persist(){
+  try{localStorage.setItem("notas-derecho",JSON.stringify(notes))}catch(e){}
+  try{localStorage.setItem("documentos-universidades",JSON.stringify(docItems))}catch(e){}
+}
+
+function $(id){return document.getElementById(id)}
+
+function normalizeText(text){
+  return String(text || "").toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9\s]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function getKeywords(question){
+  var stop = {"que":1,"como":1,"cuando":1,"donde":1,"por":1,"para":1,"con":1,"sin":1,"sobre":1,"del":1,"de":1,"la":1,"las":1,"los":1,"el":1,"una":1,"uno":1,"unos":1,"unas":1,"esta":1,"este":1,"estos":1,"estas":1,"sobre":1,"porque":1,"cual":1,"cuales":1,"dentro":1,"fuera":1};
+  return normalizeText(question).split(/\s+/).filter(function(w){return w.length>2 && !stop[w];});
+}
+
+function getBestDocumentAnswer(question){
+  if(!documentKnowledge.text){
+    return "Necesito que primero subas un documento de texto para poder responder preguntas.";
+  }
+  var q = normalizeText(question);
+  if(!q){
+    return "Escribe una pregunta para que pueda buscar la respuesta en el documento.";
+  }
+  var sentences = documentKnowledge.text
+    .replace(/\r/g, "")
+    .split(/(?<=[.!?])\s+|\n+/)
+    .map(function(s){return s.trim();})
+    .filter(function(s){return s.length>0});
+  var keywords = getKeywords(question);
+  if(!keywords.length){
+    return "No pude identificar una pregunta útil. Intenta escribir palabras clave sobre el documento.";
+  }
+  var scored = sentences.map(function(sentence){
+    var norm = normalizeText(sentence);
+    var score = 0;
+    for(var i=0;i<keywords.length;i++){
+      var kw = keywords[i];
+      if(norm.indexOf(kw)>=0){
+        score += 4 + (kw.length > 5 ? 2 : 0);
+      }
+      if((norm.match(new RegExp(kw,"g"))||[]).length > 0){
+        score += 3 * (norm.match(new RegExp(kw,"g"))||[]).length;
+      }
+    }
+    return {sentence: sentence, score: score};
+  }).filter(function(x){return x.score > 0;}).sort(function(a,b){return b.score - a.score});
+
+  if(!scored.length){
+    return "No encontré una respuesta clara en el texto cargado. Intenta formular la pregunta con palabras más cercanas al contenido del documento.";
+  }
+
+  var top = scored.slice(0, 3).map(function(item){return item.sentence;});
+  return top.join("\n\n");
+}
+
+function render(){
+  var q=$("q").value.toLowerCase().trim();
+  var all={};notes.forEach(function(n){n.k.forEach(function(t){all[t]=1})});
+  $("tags").innerHTML=Object.keys(all).sort().map(function(t){return '<span class="tag" data-t="'+escapeHtml(t)+'" style="'+(t===tagFilter?'outline:2px solid var(--acc)':'')+'">'+escapeHtml(t)+'</span>'}).join("");
+  var res=notes.filter(function(n){
+    if(tagFilter&&n.k.indexOf(tagFilter)<0)return false;
+    return !q||(n.t+" "+n.k.join(" ")+" "+n.n+" "+n.e+" "+n.r).toLowerCase().indexOf(q)>=0;
+  });
+  $("list").innerHTML=res.length?res.map(function(n){
+    return '<div class="card note"><h3>'+escapeHtml(n.t)+'</h3>'+n.k.map(function(t){return '<span class="tag" data-t="'+escapeHtml(t)+'">'+escapeHtml(t)+'</span>'}).join("")+
+      (n.n?'<div class="sec-t">Nota</div><p>'+escapeHtml(n.n)+'</p>':'')+
+      (n.e?'<div class="sec-t">Ejemplo</div><p>'+escapeHtml(n.e)+'</p>':'')+
+      (n.r?'<div class="sec-t">Referencia</div><p>'+escapeHtml(n.r)+'</p>':'')+
+      '<div class="acts"><button class="sec" data-a="edit" data-id="'+n.id+'" style="margin:0">Editar</button><button class="sec" data-a="del" data-id="'+n.id+'">Borrar</button></div></div>'
+  }).join("") : '<div class="empty">Aún no hay notas que mostrar.</div>';
+}
+
+function reset(){
+  ["t","k","n","e","r"].forEach(function(i){$(i).value=""});
+  editId=null;
+  $("save").textContent="Guardar nota";
+  $("cancel").style.display="none";
+}
+
+function renderDocuments(){
+  var q=($("u-buscar").value||"").toLowerCase().trim();
+  var groups={};
+  docItems.forEach(function(item){
+    var key=(item.universidad||"Sin universidad").trim()||"Sin universidad";
+    if(!groups[key])groups[key]=[];
+    groups[key].push(item);
+  });
+  var universidades=Object.keys(groups).sort(function(a,b){return a.localeCompare(b, "es")});
+  if(!universidades.length){
+    $("u-list").innerHTML='<div class="empty">Todavía no hay carpetas de universidad. Sube un documento para crear la primera carpeta.</div>';
+    return;
+  }
+
+  $("u-list").innerHTML=universidades.map(function(universidad){
+    var items=(groups[universidad]||[]).filter(function(item){
+      return !q || ((item.titulo||"")+" "+(item.universidad||"")+" "+(item.descripcion||"")+" "+(item.nombreArchivo||"")).toLowerCase().indexOf(q)>=0;
+    });
+    if(!items.length)return "";
+    return '<div class="card"><div class="folder-title">'+escapeHtml(universidad)+'</div><div class="doc-grid">'+items.map(function(item){
+      var isImage=item.mimeType&&item.mimeType.indexOf("image/")===0;
+      var preview = isImage ? '<img src="'+escapeHtml(item.dataUrl)+'" alt="'+escapeHtml(item.titulo)+'">' : '<a class="doc-file" href="'+escapeHtml(item.dataUrl)+'" target="_blank" download="'+escapeHtml(item.nombreArchivo||'archivo')+'">'+escapeHtml(item.nombreArchivo||"Abrir documento")+'</a>';
+      return '<div class="doc-item"><div class="meta">'+escapeHtml(item.tipo||"Documento")+'</div>'+preview+
+        '<div style="font-weight:600">'+escapeHtml(item.titulo)+'</div>'+
+        (item.descripcion?'<p class="doc-meta">'+escapeHtml(item.descripcion)+'</p>':'')+
+        '<div class="doc-meta">Archivo: '+escapeHtml(item.nombreArchivo||"Sin nombre")+'</div>'+
+        '<div class="doc-actions"><button class="sec" data-a="udel" data-id="'+item.id+'">Borrar</button></div></div>';
+    }).join("")+'</div></div>';
+  }).join("");
+}
+
+function parseFriedmanMatrix(input){
+  var lines = input.split(/\n+/).map(function(s){return s.trim();}).filter(Boolean);
+  if(!lines.length){return {error:'Ingresa al menos una fila con puntuaciones.'};}
+  var rows = lines.map(function(line){
+    return line.split(/[;,\t]/).map(function(part){return Number(part.trim());}).filter(function(v){return !Number.isNaN(v);});
+  }).filter(function(arr){return arr.length>1});
+  if(!rows.length){return {error:'Cada fila debe tener números separados por coma, punto y coma o tabulador.'};}
+  var k = rows[0].length;
+  if(rows.some(function(r){return r.length !== k;})){return {error:'Todas las filas deben contener la misma cantidad de columnas.'};}
+  return {rows:rows, n:rows.length, k:k};
+}
+
+function averageRankForTies(values){
+  var sorted = values.map(function(v, idx){return {value:v, idx:idx};}).sort(function(a,b){return a.value - b.value;});
+  var ranks = new Array(values.length).fill(0);
+  var i = 0;
+  while(i < sorted.length){
+    var j = i + 1;
+    while(j < sorted.length && Math.abs(sorted[j].value - sorted[i].value) < 1e-9){
+      j++;
+    }
+    var avgRank = (i + 1 + j) / 2;
+    for(var p = i; p < j; p++){
+      ranks[sorted[p].idx] = avgRank;
+    }
+    i = j;
+  }
+  return ranks;
+}
+
+function calculateFriedman(input){
+  var parsed = parseFriedmanMatrix(input);
+  if(parsed.error){return {error: parsed.error};}
+  var rows = parsed.rows;
+  var n = parsed.n;
+  var k = parsed.k;
+  var rankSums = new Array(k).fill(0);
+  rows.forEach(function(row){
+    var ranks = averageRankForTies(row);
+    ranks.forEach(function(rank, idx){
+      rankSums[idx] += rank;
+    });
+  });
+  var chi2 = (12 / (n * k * (k + 1))) * rankSums.reduce(function(sum, value){return sum + value * value;}, 0) - 3 * n * (k + 1);
+  var ranking = rankSums.map(function(value, idx){return {index: idx, value:value};}).sort(function(a,b){return b.value - a.value;});
+  return {chi2: chi2, ranking: ranking, n:n, k:k};
+}
+
+$("save").onclick=function(){
+  var t=$("t").value.trim();
+  if(!t){$("t").focus();return}
+  var o={id:editId||String(Date.now()),t:t,k:$("k").value.split(",").map(function(s){return s.trim().toLowerCase()}).filter(Boolean),n:$("n").value.trim(),e:$("e").value.trim(),r:$("r").value.trim()};
+  if(editId){notes=notes.map(function(x){return x.id===editId?o:x})}else{notes.unshift(o)}
+  persist();reset();render();
+};
+
+$("cancel").onclick=reset;
+$("q").oninput=render;
+$("u-buscar").oninput=renderDocuments;
+
+$("u-save").onclick=function(){
+  var universidad=$("u-universidad").value.trim();
+  var titulo=$("u-titulo").value.trim();
+  var archivo=$("u-file").files[0];
+  if(!universidad){$("u-universidad").focus();return}
+  if(!titulo){$("u-titulo").focus();return}
+  if(!archivo){$("u-file").focus();return}
+
+  var reader=new FileReader();
+  reader.onload=function(e){
+    docItems.unshift({
+      id:String(Date.now()+Math.random()),
+      universidad:universidad,
+      titulo:titulo,
+      descripcion:$("u-desc").value.trim(),
+      tipo:$("u-tipo").value,
+      mimeType:archivo.type||"application/octet-stream",
+      nombreArchivo:archivo.name,
+      dataUrl:e.target.result,
+      createdAt:Date.now()
+    });
+    persist();
+    $("u-universidad").value="";
+    $("u-titulo").value="";
+    $("u-desc").value="";
+    $("u-file").value="";
+    renderDocuments();
+  };
+  reader.readAsDataURL(archivo);
+};
+
+$("fr-calc").onclick=function(){
+  var input=$("fr-matriz").value.trim();
+  var result=calculateFriedman(input);
+  if(result.error){
+    $("fr-result").className="warning-box";
+    $("fr-result").innerHTML='<strong>Error:</strong> '+escapeHtml(result.error);
+    return;
+  }
+  var rankingText = result.ranking.map(function(item, idx){return (idx + 1)+'. Opción '+(item.index + 1)+': suma de rangos '+item.value.toFixed(2);}).join('<br>');
+  $("fr-result").className="result-box";
+  $("fr-result").innerHTML='<strong>Resultado de Friedman</strong><br>Evaluadores: '+result.n+'<br>Alternativas: '+result.k+'<br><strong>χ² = '+result.chi2.toFixed(4)+'</strong><br><br>'+rankingText;
+};
+
+$("docq-file").onchange=function(){
+  var file = $("docq-file").files[0];
+  if(!file){return;}
+  var reader = new FileReader();
+  reader.onload = function(e){
+    var text = String(e.target.result || "");
+    if(file.name.toLowerCase().endsWith(".html") || file.type.indexOf("html") >= 0){
+      text = text.replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<style[\s\S]*?<\/style>/gi, " ").replace(/<[^>]+>/g, " ");
+    }
+    documentKnowledge = { text: text, fileName: file.name };
+    $("docq-result").className = "result-box";
+    $("docq-result").innerHTML = 'Archivo cargado: <strong>'+escapeHtml(file.name)+'</strong><br>Ya puedes hacer preguntas sobre este documento.';
+  };
+  reader.readAsText(file, "UTF-8");
+};
+
+$("docq-ask").onclick=function(){
+  var q = $("docq-question").value.trim();
+  if(!q){
+    $("docq-result").className = "warning-box";
+    $("docq-result").innerHTML = 'Escribe primero una pregunta sobre el documento.';
+    return;
+  }
+  var answer = getBestDocumentAnswer(q);
+  $("docq-result").className = "result-box";
+  $("docq-result").innerHTML = '<strong>Pregunta:</strong> '+escapeHtml(q)+'<br><br><strong>Respuesta sugerida:</strong><br><pre>'+escapeHtml(answer)+'</pre>';
+};
+
+document.addEventListener("click",function(ev){
+  var el=ev.target,t=el.getAttribute("data-t"),v=el.getAttribute("data-v"),a=el.getAttribute("data-a"),id=el.getAttribute("data-id"),ty=el.getAttribute("data-ty");
+  if(v){
+    $("v-mis").hidden=(v!=="mis");
+    $("v-bib").hidden=(v!=="bib");
+    $("v-friedman").hidden=(v!=="friedman");
+    $("v-docq").hidden=(v!=="docq");
+    Array.prototype.forEach.call(document.querySelectorAll(".tabs button"),function(b){b.className=(b.getAttribute("data-v")===v)?"on":""});
+  }
+  if(t){tagFilter=(tagFilter===t)?null:t;render()}
+  if(a==="del"&&confirm("¿Borrar esta nota?")){notes=notes.filter(function(x){return x.id!==id});persist();render()}
+  if(a==="edit"){var n=notes.filter(function(x){return x.id===id})[0];editId=id;$("t").value=n.t;$("k").value=n.k.join(", ");$("n").value=n.n;$("e").value=n.e;$("r").value=n.r;$("save").textContent="Actualizar nota";$("cancel").style.display="inline-block";window.scrollTo(0,0)}
+  if(a==="udel"&&confirm("¿Borrar este documento?")){docItems=docItems.filter(function(x){return x.id!==id});persist();renderDocuments()}
+  if(ty){lib.tipo=(lib.tipo===ty)?null:ty;libRender()}
+  if(a==="ldel"&&lib.db&&confirm("¿Borrar esta publicación?")){try{await lib.db.doc("publicaciones/"+id).delete()}catch(e){$("lib-msg").textContent="No se pudo borrar."}}
+});
+
+var lib={items:[],db:null,user:null,uid:null,names:{},tipo:null};
+
+function libRender(){
+  var q=$("b-q").value.toLowerCase().trim();
+  $("b-tipos").innerHTML=["Clase","Apuntes","Examen","Otro"].map(function(t){return '<span class="tag" data-ty="'+escapeHtml(t)+'" style="'+(t===lib.tipo?'outline:2px solid var(--acc)':'')+'">'+escapeHtml(t)+'</span>'}).join("");
+  var res=lib.items.filter(function(p){
+    if(lib.tipo&&p.tipo!==lib.tipo)return false;
+    return !q||((p.t||"")+" "+(p.materia||"")+" "+(p.c||"")).toLowerCase().indexOf(q)>=0;
+  });
+  $("b-list").innerHTML=res.length?res.map(function(p){
+    var who=lib.names[p.autorId]||"Un estudiante";
+    var d=p.ts?new Date(p.ts).toLocaleDateString("es"):"";
+    return '<div class="card note"><span class="tag">'+escapeHtml(p.tipo||"")+'</span>'+(p.materia?'<span class="tag">'+escapeHtml(p.materia)+'</span>':'')+
+      '<h3>'+escapeHtml(p.t||"")+'</h3><p class="meta">'+escapeHtml(who)+(d?' · '+d:'')+'</p>'+
+      (p.c?'<p>'+escapeHtml(p.c)+'</p>':'')+
+      (lib.uid&&p.autorId===lib.uid?'<div class="acts"><button class="sec" data-a="ldel" data-id="'+escapeHtml(p.id)+'" style="margin:0">Borrar</button></div>':'')+'</div>'}).join("")
+    :'<div class="empty">Todavía no hay publicaciones.</div>';
+}
+
+async function libInit(){
+  if(typeof claude==="undefined"||!claude.use){$("lib-msg").textContent="La biblioteca compartida no está disponible aquí.";$("lib-form").hidden=true;return}
+  try{lib.user=await claude.use("user")}catch(e){}
+  try{lib.db=await claude.use("db")}catch(e){}
+  if(!lib.db){$("lib-msg").textContent="La biblioteca compartida no está disponible. Inicia sesión para verla.";$("lib-form").hidden=true;return}
+  try{lib.uid=lib.user?await lib.user.id():null}catch(e){}
+  var cw=null;try{cw=lib.user?await lib.user.can("data.write"):null}catch(e){}
+  if(cw===false){$("lib-form").hidden=true;$("lib-msg").textContent="Puedes leer la biblioteca, pero tu acceso no permite publicar."}else{$("lib-msg").textContent=""}
+  lib.db.collection("publicaciones").orderBy("ts","desc").limit(200).onSnapshot(async function(s){
+    lib.items=s.docs.map(function(d){var o=d.data()||{};o.id=d.id;return o});
+    var ids=[];lib.items.forEach(function(p){if(p.autorId&&ids.indexOf(p.autorId)<0&&lib.names[p.autorId]===undefined)ids.push(p.autorId)});
+    if(ids.length&&lib.user){try{var ps=await lib.user.profiles(ids);ids.forEach(function(i){lib.names[i]=(ps[i]&&ps[i].name)||""})}catch(e){}}
+    libRender();
+  },function(){ $("lib-msg").textContent="No se pudo cargar la biblioteca."; });
+}
+
+$("b-pub").onclick=async function(){
+  var t=$("b-t").value.trim();
+  if(!t){$("b-t").focus();return}
+  if(!lib.db)return;
+  try{await lib.db.collection("publicaciones").add({tipo:$("b-tipo").value,t:t,materia:$("b-m").value.trim(),c:$("b-c").value.trim(),autorId:lib.uid||"",ts:Date.now()});$("b-t").value="";$("b-m").value="";$("b-c").value="";$("lib-msg").textContent=""}
+  catch(e){ $("lib-msg").textContent="No se pudo publicar. Es posible que tu acceso no lo permita." }
+};
+
+$("b-q").oninput=libRender;
+
+load();render();renderDocuments();libRender();libInit();
+</script>
+</body>
+</html>

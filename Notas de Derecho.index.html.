@@ -468,3 +468,14 @@ load();render();renderDocuments();libRender();libInit();
 </script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Notas de Derecho</title>
+</head>
+<body>
+    <h1>Mis Notas de Derecho</h1>
+    <!-- Aquí debe ir todo tu contenido -->
+</body>
+</html>
